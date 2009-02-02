@@ -1,0 +1,26 @@
+
+# cat=basic; type=String; label=user name: http header variable used for username.
+username=REMOTE_USER 
+
+# cat=basic; type=String; label=mail: http header variable used for email address.
+email=HTTP_SHIB_INETORGPERSON_MAIL
+
+# cat=basic; type=String; label=given name: http header variable used for given name. (optional)
+gn=HTTP_SHIB_INETORGPERSON_GIVENNAME
+
+# cat=basic; type=String; label=surname: http header variable used for surname. (optional)
+sn=HTTP_SHIB_PERSON_SURNAME
+
+# cat=basic; type=int+; label=Pid sysfolder: sysfolder where the shibboleth users are stored
+sysfolderpid= 
+
+# cat=basic; type=int+; label=Id group: group id for all shibboleth users
+usergroupid=
+
+TSConstantEditor.basic {
+  description = <p><span style="background:red; padding:1px 2px; color:#fff; font-weight:bold;">1</span> required </br></p> <p><span style="background:red; padding:1px 2px; color:#fff; font-weight:bold;">2</span> required </br></p><p><span style="background:red; padding:1px 2px; color:#fff; font-weight:bold;">3</span> required </br></p><p><span style="background:red; padding:1px 2px; color:#fff; font-weight:bold;">4</span> required </br></p>
+  1=username
+  2=email
+  3=sysfolderpid
+  4=usergroupid
+}

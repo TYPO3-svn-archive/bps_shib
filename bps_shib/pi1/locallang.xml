@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_bpsshib_pi1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="login_button_label">Go to login</label>
+			<label index="login_info_ok">You are logged in.</label>
+			<label index="login_info_faild">Login FAILD.</label>
+			<label index="logout_button_label">logout</label>
+			<label index="logout_info">To get final logout, please close the browser window!</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="login_button_label">Zum Login</label>
+			<label index="login_info_ok">Sie sind eingeloggt.</label>
+			<label index="login_info_faild">Login FEHLGESCHLAGEN.</label>
+			<label index="logout_button_label">Abmelden</label>
+			<label index="logout_info">Um sich entgültig Abzumelden, schließen Sie bitte das Browserfenster!</label>
+		</languageKey>
+	</data>
+</T3locallang>
