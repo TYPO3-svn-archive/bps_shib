@@ -30,6 +30,7 @@
 
 require_once (PATH_tslib . 'class.tslib_pibase.php');
 require_once ('class.tx_bpsshib_session.php');
+require_once ('class.tx_bpsshib_shibattribute.php');
 class tx_bpsshib_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_bpsshib_pi1'; // Same as class name
 	var $scriptRelPath = 'pi1/class.tx_bpsshib_pi1.php'; // Path to this script relative to the extension dir.
@@ -145,7 +146,16 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 			$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 			return($_extConfig!=null);
 	}
-	
+	function convert2ShibAttributeArray($sessPHP){
+            $rarray=array();
+            foreach ( array_keys($sessPHP) as $key) {
+                $shiba=new tx_bpsshib_shibattribute();
+                $shiba->name=$key;
+                $shiba->value=$sessPHP[$key];
+                $rarray[sizeof($rarray)+1]=$shiba;
+            }
+            return $rarray;
+        }
 	function getShibUserData(){
 		t3lib_div::devLog("enter getShibUserData()",$this->extKey);
 		$sessPHP = $GLOBALS["TSFE"]->fe_user->getKey('ses', 'bps_shib_data');
@@ -165,8 +175,8 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 				$name=$name . " ".$sessPHP[$_extConfig['gn']];
 			}
 		}
-
-		$userdata=array('username' => $username,'email'=>$email,'name'=>$name);
+                $allAttributes=$this->convert2ShibAttributeArray($sessPHP);
+		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'allAttributes'=>$allAttributes);
 		
 		return $userdata;
 	}
