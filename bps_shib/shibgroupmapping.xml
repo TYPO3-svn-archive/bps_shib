@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<groups>
+    <group id="22">
+        <shibattribute name="orgunit" isValue="Informatik"/>
+		<!-- and -->
+        <shibattribute name="studygroup" isValue="002079"/>
+    </group>
+	<group id="0815">
+		<shibattribute name="orgunit" isValue="Musik"/>
+		<!-- and -->
+		<shibattribute name="studygroup" isValue="002079"/>
+    </group>
+</groups>
