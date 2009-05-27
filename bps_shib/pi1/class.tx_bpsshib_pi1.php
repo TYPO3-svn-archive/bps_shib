@@ -31,11 +31,13 @@
 require_once (PATH_tslib . 'class.tslib_pibase.php');
 require_once ('class.tx_bpsshib_session.php');
 require_once ('class.tx_bpsshib_shibattribute.php');
+require_once ('class.tx_bpsshib_groupmapping.php');
 class tx_bpsshib_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_bpsshib_pi1'; // Same as class name
 	var $scriptRelPath = 'pi1/class.tx_bpsshib_pi1.php'; // Path to this script relative to the extension dir.
 	var $extKey = 'bps_shib'; // The extension key.
 	var $pi_checkCHash = TRUE;
+        var $ShibGroupMapper;# = new tx_bpsshib_groupmapping();
 
 	/**
 	 * The main method of the PlugIn
@@ -48,6 +50,7 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
+                $this->ShibGroupMapper = new tx_bpsshib_groupmapping();
 		//Cache off
 		$GLOBALS["TSFE"]->set_no_cache();
 		$bps_s = new tx_bpsshib_session();
@@ -108,10 +111,10 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 				
 				if (!$this->userExists($username)){
 					//Nutzer muss angelegt werden
-					$this->import_singleuser($username);
+					$this->import_singleuser($userdata);
 				}else{
 					//Nutzerdaten updaten
-					$this->update_singleuser($username);
+					$this->update_singleuser($userdata);
 				}
 				//versuche Login
 				if ($this->userLogin($username) == true){
@@ -176,7 +179,8 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 			}
 		}
                 $allAttributes=$this->convert2ShibAttributeArray($sessPHP);
-		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'allAttributes'=>$allAttributes);
+                $groups=$this->ShibGroupMapper->getGroupIDs($allAttributes);
+		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'groups'=>$groups);
 		
 		return $userdata;
 	}
@@ -222,7 +226,9 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 		return (is_array($row));
  	}
  
-	function import_singleuser($username,$user_table="fe_users") {
+	function import_singleuser($userdata,$user_table="fe_users") {
+                //debugster($userdata);
+                $username = $userdata['username'];
 		t3lib_div::devLog("enter import_singleuser(".$username.")",$this->extKey);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$pid=$_extConfig['sysfolderpid'];
@@ -233,12 +239,9 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 		
 		if (!is_array($row) && ($username != '')){
 			//Nutzer nicht gefunden , kann angelegt werden
-			$userdata = $this->getShibUserData();
-			//debugster($userdata);
-			$username = $userdata['username'];
 			$insValues=array('crdate' => time(),
-	               	'tstamp' => time(),
-	                'pid'=> $pid,
+                                        'tstamp' => time(),
+                                        'pid'=> $pid,
 					'username' => str_replace("'", "''", $username),
 					'name' => str_replace("'", "''",$userdata['name']),
 					'email' => $userdata['email'],
@@ -253,13 +256,12 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 	
 		
 		
-	function update_singleuser($username, $user_table= 'fe_users') {
+	function update_singleuser($userdata, $user_table= 'fe_users') {
+                $username = $userdata['username'];
 		t3lib_div::devLog("enter update_singleuser(".$username.")",$this->extKey);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$pid=$_extConfig['sysfolderpid'];
 		$usergroup=$_extConfig['usergroupid'];
-		$userdata = $this->getShibUserData();
-		$username = $userdata['username'];
 		$updateArray=array(
 	                'pid'=> $pid,
 					'username' => str_replace("'", "''", $username),

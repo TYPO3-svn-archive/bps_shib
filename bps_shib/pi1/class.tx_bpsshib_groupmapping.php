@@ -24,7 +24,7 @@
 /**
  * @author	Ingmar Kroll <support@bps-system.de>
  */
-require_once ('class.txt_bpsshib_shibattribute.php');
+require_once ('class.tx_bpsshib_shibattribute.php');
 
 class tx_bpsshib_groupmapping
 {
@@ -62,9 +62,9 @@ class tx_bpsshib_groupmapping
     function getGroupIDs($userAttibutes)
     {
         $doc = new DOMDocument();
-        $doc->load('shibgroupmapping.xml');
+        $doc->load('typo3conf/ext/bps_shib/shibgroupmapping.xml');
         $groups = $doc->getElementsByTagName("group");
-        $rvalue = array ();
+        $rvalue = "";
         foreach ($groups as $group)
         {
             $xml_group_id = $group->getAttribute("id");
@@ -82,7 +82,7 @@ class tx_bpsshib_groupmapping
             }
             if ($passed)
             {
-                $rvalue[sizeof($rvalue)+1] = $xml_group_id;
+                $rvalue=$rvalue.",".$xml_group_id;
             }
 
         }
