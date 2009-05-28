@@ -111,10 +111,10 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 				
 				if (!$this->userExists($username)){
 					//Nutzer muss angelegt werden
-					$this->import_singleuser($userdata);
+					$this->createUser($userdata);
 				}else{
 					//Nutzerdaten updaten
-					$this->update_singleuser($userdata);
+					$this->updateUser($userdata);
 				}
 				//versuche Login
 				if ($this->userLogin($username) == true){
@@ -162,9 +162,11 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 	function getShibUserData(){
 		t3lib_div::devLog("enter getShibUserData()",$this->extKey);
 		$sessPHP = $GLOBALS["TSFE"]->fe_user->getKey('ses', 'bps_shib_data');
+                debugster($sessPHP);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$username = $sessPHP[$_extConfig['username']];
 		$email = $sessPHP[$_extConfig['email']];
+                $defaultgroup = $_extConfig['usergroupid'];
 		//optional
 		$name="";
 		if($_extConfig['sn']!=null){
@@ -180,9 +182,11 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 		}
                 $allAttributes=$this->convert2ShibAttributeArray($sessPHP);
                 $groups=$this->ShibGroupMapper->getGroupIDs($allAttributes);
-		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'groups'=>$groups);
-		
-		return $userdata;
+
+		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'groups'=>$defaultgroup.$groups);
+		//t3lib_div::devLog("enter getShibUserData()",$this->extKey);
+		debugster($userdata);
+                return $userdata;
 	}
 	
 	function getUrl(){
@@ -196,7 +200,7 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 			// Login user
 			$loginData=array(
 			        'uname' => $username,
-					'uident'=> "85ae4c74b5f6ab15d6e9d19014c6bc65",
+					'uident'=> $this->getUIdent($username),
 			        'status' =>'login'
 			);
 			$GLOBALS['TSFE']->fe_user->checkPid = FALSE;
@@ -225,14 +229,17 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		return (is_array($row));
  	}
- 
-	function import_singleuser($userdata,$user_table="fe_users") {
+
+
+        /**
+         *  This method creates a new typo3 user based on the committed userdata
+         */
+	function createUser($userdata,$user_table="fe_users") {
                 //debugster($userdata);
                 $username = $userdata['username'];
-		t3lib_div::devLog("enter import_singleuser(".$username.")",$this->extKey);
+		t3lib_div::devLog("enter createUser(".$username.")",$this->extKey);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$pid=$_extConfig['sysfolderpid'];
-		$usergroup=$_extConfig['usergroupid'];
 		$query = (($pid)?'pid ='.$pid.' AND ':'')."NOT deleted AND lower(username) = '".$GLOBALS['TYPO3_DB']->quoteStr(strtolower($username),$user_table)."'";
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('email', $user_table, $query);
 		$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
@@ -245,30 +252,36 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 					'username' => str_replace("'", "''", $username),
 					'name' => str_replace("'", "''",$userdata['name']),
 					'email' => $userdata['email'],
-					'usergroup' => $usergroup,
-					'password' => "85ae4c74b5f6ab15d6e9d19014c6bc65"
+					'usergroup' => $userdata['groups'],
+					 // this password is never used by user
+					'password' => $this->getUIdent($username)
 					);
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery($user_table,$insValues);
 		}
 	}		
-			
-		
+
+
+        function getUIdent($username){
+            return(strrev(md5(strrev($username))));
+        }
+
 	
-		
-		
-	function update_singleuser($userdata, $user_table= 'fe_users') {
+	/**
+         *  This method updates a typo3 user based on the committed userdata
+         */
+	function updateUser($userdata, $user_table= 'fe_users') {
                 $username = $userdata['username'];
-		t3lib_div::devLog("enter update_singleuser(".$username.")",$this->extKey);
+		t3lib_div::devLog("enter updateUser(".$username.")",$this->extKey);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$pid=$_extConfig['sysfolderpid'];
-		$usergroup=$_extConfig['usergroupid'];
 		$updateArray=array(
 	                'pid'=> $pid,
 					'username' => str_replace("'", "''", $username),
 					'name' => str_replace("'", "''",$userdata['name']),
 					'email' => $userdata['email'],
-					'usergroup' => $usergroup,
-					'password' => "85ae4c74b5f6ab15d6e9d19014c6bc65"
+					'usergroup' => $userdata['groups'],
+                                        // this password is never used by user
+					'password' => $this->getUIdent($username)
 					);
 		$GLOBALS['TYPO3_DB']->exec_UPDATEquery($user_table,"lower(username) = '".strtolower($GLOBALS['TYPO3_DB']->quoteStr($username,$user_table))."' AND pid=".$pid,$updateArray);
 	

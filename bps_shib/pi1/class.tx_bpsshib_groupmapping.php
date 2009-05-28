@@ -51,7 +51,7 @@ class tx_bpsshib_groupmapping
     {
         foreach ($aarray as $a2)
         {
-            if (compareShibAttributes($a1, $a2, $casesensitve))
+            if ($this->compareShibAttributes($a1, $a2, $casesensitve))
             {
                 return true;
             }
@@ -72,10 +72,10 @@ class tx_bpsshib_groupmapping
             $shibattributes = $group->getElementsByTagName("shibattribute");
             foreach ($shibattributes as $shibattribute)
             {
-                $xml_shibattribute = new ShibAttribute;
+                $xml_shibattribute = new tx_bpsshib_shibattribute();
                 $xml_shibattribute->name = $shibattribute->getAttribute("name");
                 $xml_shibattribute->value = $shibattribute->getAttribute("isValue");
-                if (!isShibAttributeInArray($xml_shibattribute, $userAttibutes, false))
+                if (!$this->isShibAttributeInArray($xml_shibattribute, $userAttibutes, false))
                 {
                     $passed = false;
                 }
