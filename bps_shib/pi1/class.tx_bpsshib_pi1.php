@@ -162,7 +162,7 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 	function getShibUserData(){
 		t3lib_div::devLog("enter getShibUserData()",$this->extKey);
 		$sessPHP = $GLOBALS["TSFE"]->fe_user->getKey('ses', 'bps_shib_data');
-                debugster($sessPHP);
+        //debugster($sessPHP);
 		$_extConfig = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['bps_shib']);
 		$username = $sessPHP[$_extConfig['username']];
 		$email = $sessPHP[$_extConfig['email']];
@@ -185,7 +185,7 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 
 		$userdata=array('username' => $username,'email'=>$email,'name'=>$name,'groups'=>$defaultgroup.$groups);
 		//t3lib_div::devLog("enter getShibUserData()",$this->extKey);
-		debugster($userdata);
+		//debugster($userdata);
                 return $userdata;
 	}
 	

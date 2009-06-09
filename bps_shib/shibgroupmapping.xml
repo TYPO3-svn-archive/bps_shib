@@ -5,9 +5,12 @@
 		<!-- and -->
         <shibattribute name="studygroup" isValue="002079"/>
     </group>
-	<group id="0815">
+    <group id="0815">
 		<shibattribute name="orgunit" isValue="Musik"/>
 		<!-- and -->
 		<shibattribute name="studygroup" isValue="002079"/>
+    </group>
+    <group id="7">
+                <shibattribute name="HTTP_BPSINSTITUTION" isValue="Testinstititution der BPS VHO"/>
     </group>
 </groups>
