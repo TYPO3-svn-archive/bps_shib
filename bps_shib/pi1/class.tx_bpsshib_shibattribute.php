@@ -28,5 +28,7 @@
 class tx_bpsshib_shibattribute{
     var $name;
     var $value;
+    var $operator;
+    var $casesensitve;
 }
  ?>

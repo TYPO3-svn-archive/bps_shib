@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <groups>
     <group id="22">
-        <shibattribute name="orgunit" isValue="Informatik"/>
+        <shibattribute name="orgunit" operator="is" value="Informatik" casesensitve="true"/>
 		<!-- and -->
-        <shibattribute name="studygroup" isValue="002079"/>
+        <shibattribute name="studygroup" operator="is" value="002079" casesensitve="true"/>
     </group>
     <group id="0815">
-		<shibattribute name="orgunit" isValue="Musik"/>
+		<shibattribute name="orgunit" operator="is" value="Musik" casesensitve="true"/>
 		<!-- and -->
-		<shibattribute name="studygroup" isValue="002079"/>
+		<shibattribute name="studygroup" operator="is" value="002079" casesensitve="true"/>
     </group>
     <group id="7">
-                <shibattribute name="HTTP_BPSINSTITUTION" isValue="Testinstititution der BPS VHO"/>
+                <shibattribute name="HTTP_BPSINSTITUTION" operator="contains" value="BPS" casesensitve="false"/>
     </group>
 </groups>

@@ -29,29 +29,36 @@ require_once ('class.tx_bpsshib_shibattribute.php');
 class tx_bpsshib_groupmapping
 {
 
-    function compareShibAttributes($a1, $a2, $casesensitve)
+    function compareShibAttributes($xml_shibattribute, $userAttibute)
     {
-        if ($casesensitve)
-        {
-            if ($a1->name === $a2->name and $a1->value === $a2->value)
-            {
-                return true;
-            }
-        } else
-        {
-            if (strtolower($a1->name) === strtolower($a2->name) and strtolower($a1->value) === strtolower($a2->value))
-            {
-                return true;
-            }
-        }
-        return false;
+
+		if (strtolower($xml_shibattribute->name) === strtolower($userAttibute->name)){
+			
+	        if (strtolower($xml_shibattribute->casesensitve)!=="true"){
+	        	$xml_shibattribute->value =strtolower($xml_shibattribute->value);
+	        	$userAttibute->value=strtolower($userAttibute->value);
+	        }
+	        switch (strtolower($xml_shibattribute->operator)){
+	        	case "is":
+			        return $xml_shibattribute->value === $userAttibute->value;
+			    case "contains":
+			    	return strpos($userAttibute->value,$xml_shibattribute->value)!==false;
+		        default:
+    				return false;
+	        }
+	        
+	        
+	  	}else{
+			return false;
+		}
+
     }
 
-    function isShibAttributeInArray($a1, $aarray, $casesensitve)
+    function isShibAttributeInArray($xml_shibattribute, $userAttibutes)
     {
-        foreach ($aarray as $a2)
+        foreach ($userAttibutes as $userAttibute)
         {
-            if ($this->compareShibAttributes($a1, $a2, $casesensitve))
+            if ($this->compareShibAttributes($xml_shibattribute, $userAttibute))
             {
                 return true;
             }
@@ -74,8 +81,10 @@ class tx_bpsshib_groupmapping
             {
                 $xml_shibattribute = new tx_bpsshib_shibattribute();
                 $xml_shibattribute->name = $shibattribute->getAttribute("name");
-                $xml_shibattribute->value = $shibattribute->getAttribute("isValue");
-                if (!$this->isShibAttributeInArray($xml_shibattribute, $userAttibutes, false))
+                $xml_shibattribute->value = $shibattribute->getAttribute("value");
+                $xml_shibattribute->operator = $shibattribute->getAttribute("operator");
+                  $xml_shibattribute->casesensitve = $shibattribute->getAttribute("casesensitve");
+                if (!$this->isShibAttributeInArray($xml_shibattribute, $userAttibutes))
                 {
                     $passed = false;
                 }
