@@ -11,6 +11,6 @@
 		<shibattribute name="studygroup" operator="is" value="002079" casesensitve="true"/>
     </group>
     <group id="7">
-                <shibattribute name="HTTP_BPSINSTITUTION" operator="contains" value="BPS" casesensitve="false"/>
+        <shibattribute name="HTTP_BPSINSTITUTION" operator="contains" value="BPS" casesensitve="true"/>
     </group>
 </groups>

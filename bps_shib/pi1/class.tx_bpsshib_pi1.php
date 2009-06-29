@@ -80,7 +80,7 @@ class tx_bpsshib_pi1 extends tslib_pibase {
 				$isAuthTypo=true;
 				
 			} else {
-				//Nutzer hat keine Auth und muss zur Shib-Seite geleitet werden
+				//Nutzer hat keine Auth und muss zur Shib-Seite geleitet werden, wenn er den Button klickt
 				t3lib_div::devLog("offer redirect 2 shib",$this->extKey);
 				$array["backLink"] = $this->getUrl();
 				$bps_s->setSessionVariables($_COOKIE["fe_typo_user"], $array);
