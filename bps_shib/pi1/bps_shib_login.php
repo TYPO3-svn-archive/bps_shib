@@ -12,6 +12,7 @@
 ## Letzten Login anzeigen: http://www.npostnik.de/typo3/letzen-login-anzeigen/
 require_once ('class.tx_bpsshib_pi1.php');
 $pi=new tx_bpsshib_pi1();
-
-$content="Nutzername: ".$GLOBALS['TSFE']->fe_user->user["username"];
+#$pi->init();
+$content=$pi->main("","");
+//$content=$pi->pi_wrapInBaseClass($pi->process($pi->getStatus()));
 ?>

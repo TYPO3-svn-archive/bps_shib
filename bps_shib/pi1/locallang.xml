@@ -10,14 +10,16 @@
 			<label index="login_info_ok">You are logged in.</label>
 			<label index="login_info_faild">Login FAILD.</label>
 			<label index="logout_button_label">logout</label>
-			<label index="logout_info">To get final logout, please close the browser window!</label>
+			<!-- <label index="logout_info">To get final logout, please close the browser window!</label> -->
+			<label index="username">username</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="login_button_label">Zum Login</label>
 			<label index="login_info_ok">Sie sind eingeloggt.</label>
 			<label index="login_info_faild">Login FEHLGESCHLAGEN.</label>
 			<label index="logout_button_label">Abmelden</label>
-			<label index="logout_info">Um sich entgültig Abzumelden, schließen Sie bitte das Browserfenster!</label>
+			<!-- <label index="logout_info">Um sich entgültig Abzumelden, schließen Sie bitte das Browserfenster!</label> -->
+			<label index="username">Nutzername</label>
 		</languageKey>
 	</data>
 </T3locallang>
