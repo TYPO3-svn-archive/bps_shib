@@ -32,8 +32,13 @@ if ($fe_typo_user == null) {
 }
 $session = new tx_bpsshib_session();
 $array = $session->getSessionVariables($fe_typo_user);
+if(!is_array($array)){
+	die("Sorry, an error occurred, please try again.");
+}
 $arrayback=array_merge($array,$_SERVER);
 $arrayback["isAuth"] = true;
 $session->setSessionVariables($fe_typo_user, $arrayback);
 Header('Location: ' . $arrayback["backLink"]);
+
+
 ?>
